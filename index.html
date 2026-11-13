@@ -30,52 +30,83 @@
       color: var(--azul-indigo);
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Configuración exacta para exportar a PDF (Libro A5 vertical) */
-    @page {
-      size: 148mm 210mm;
-      margin: 0;
+    /* Contenedor principal adaptable */
+    .reader-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100dvh;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 10px 12px 14px 12px;
     }
 
+    /* Pista deslizable tipo libro */
+    .carousel-track {
+      display: flex;
+      width: 100%;
+      flex: 1;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      touch-action: pan-x pan-y;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .carousel-track {
+        scroll-behavior: smooth;
+      }
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hoja individual de libro */
     .page {
-      width: 148mm;
-      height: 210mm;
+      flex: 0 0 100%;
+      width: 100%;
+      max-width: 100%;
+      height: min(720px, calc(100dvh - 84px));
       background-color: var(--bg-crema);
-      margin: 20px auto;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 18mm 16mm;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      page-break-after: always;
+      padding: clamp(1.2rem, 5vw, 2.2rem) clamp(1rem, 4.5vw, 1.8rem);
+      box-shadow: 0 8px 24px rgba(28, 53, 77, 0.12);
+      border-radius: 8px;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
       /* Textura sutil de papel acuarela */
       background-image: 
         radial-gradient(at 10% 10%, rgba(155, 86, 36, 0.05) 0px, transparent 50%),
         radial-gradient(at 90% 90%, rgba(28, 53, 77, 0.06) 0px, transparent 50%);
     }
 
-    @media print {
-      body {
-        background: none;
-      }
-      .page {
-        margin: 0;
-        box-shadow: none;
-      }
-    }
-
-    /* Marco decorativo sutil interior */
+    /* Marco decorativo interior */
     .page::before {
       content: "";
       position: absolute;
-      top: 8mm;
-      left: 8mm;
-      right: 8mm;
-      bottom: 8mm;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
       border: 0.5pt solid rgba(155, 86, 36, 0.22);
+      border-radius: 4px;
       pointer-events: none;
       z-index: 3;
     }
@@ -91,7 +122,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 68%;
+      height: 64%;
       overflow: hidden;
     }
 
@@ -108,36 +139,36 @@
       position: relative;
       z-index: 4;
       text-align: center;
-      padding: 0 14mm 16mm 14mm;
-      background: linear-gradient(to top, var(--bg-crema) 75%, transparent 100%);
+      padding: 0 1.2rem 1.4rem 1.2rem;
+      background: linear-gradient(to top, var(--bg-crema) 78%, transparent 100%);
     }
 
     .cover-kicker {
       font-family: 'Playfair Display', serif;
-      font-size: 11pt;
+      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--azul-indigo);
-      margin-bottom: 2mm;
+      margin-bottom: 2px;
     }
 
     .cover-title-script {
       font-family: 'Great Vibes', cursive;
-      font-size: 42pt;
+      font-size: clamp(2.8rem, 9vw, 3.8rem);
       color: var(--ocre-calido);
       line-height: 1.05;
-      margin: 1mm 0 3mm 0;
+      margin: 2px 0 6px 0;
       font-weight: normal;
     }
 
     .cover-subtitle {
       font-family: 'Lora', serif;
       font-style: italic;
-      font-size: 10.5pt;
+      font-size: clamp(0.85rem, 2.8vw, 1rem);
       color: var(--azul-indigo);
       line-height: 1.5;
-      max-width: 95mm;
-      margin: 0 auto 4mm auto;
+      max-width: 90%;
+      margin: 0 auto 6px auto;
     }
 
     /* Ornamento del corazón */
@@ -146,9 +177,9 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin: 4mm auto;
+      margin: 8px auto;
       color: var(--ocre-calido);
-      font-size: 10pt;
+      font-size: 0.9rem;
       position: relative;
       z-index: 2;
     }
@@ -156,7 +187,7 @@
     .divider::before,
     .divider::after {
       content: "";
-      width: 22mm;
+      width: 24px;
       height: 0.7pt;
       background-color: var(--ocre-calido);
       opacity: 0.65;
@@ -165,18 +196,18 @@
     /* PÁGINA 2: DEDICATORIA */
     .dedication-title {
       font-family: 'Great Vibes', cursive;
-      font-size: 30pt;
+      font-size: clamp(1.9rem, 6.5vw, 2.5rem);
       color: var(--ocre-calido);
       text-align: center;
       font-weight: normal;
-      margin-bottom: 6mm;
+      margin-bottom: 12px;
       position: relative;
       z-index: 2;
     }
 
     .dedication-text {
-      font-size: 11pt;
-      line-height: 1.85;
+      font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+      line-height: 1.75;
       text-align: center;
       color: var(--azul-indigo);
       font-style: italic;
@@ -184,63 +215,61 @@
       z-index: 2;
     }
 
-    /* PÁGINAS 3 A 11: PENSAMIENTOS CON ACUARELA DE FONDO ARTÍSTICO (SIN TOCAR EL TEXTO) */
+    /* PÁGINAS 3 A 11: PENSAMIENTOS CON ACUARELA */
     .thought-page {
       justify-content: flex-start;
-      padding-top: 18mm;
+      padding-top: clamp(1.8rem, 6vw, 2.8rem);
       position: relative;
     }
 
-    /* Efecto original de acuarela grande de fondo, ubicada abajo-centro y sutil para no estorbar */
     .thought-bg-art {
       position: absolute;
-      bottom: 10mm;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
-      width: 100mm;
-      height: 90mm;
-      opacity: 0.22; /* Sutil y elegante marca de agua */
+      width: min(85%, 260px);
+      max-height: 45%;
+      opacity: 0.22;
       pointer-events: none;
       z-index: 1;
       object-fit: contain;
       mix-blend-mode: multiply;
-      /* Difumina los bordes para que se funda delicadamente con el papel crema */
       -webkit-mask-image: radial-gradient(circle at 50% 55%, black 45%, transparent 75%);
       mask-image: radial-gradient(circle at 50% 55%, black 45%, transparent 75%);
     }
 
     .thought-number {
       font-family: 'Playfair Display', serif;
-      font-size: 9.5pt;
+      font-size: clamp(0.75rem, 2.4vw, 0.85rem);
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--ocre-calido);
       text-align: center;
-      margin-bottom: 2mm;
+      margin-bottom: 4px;
       position: relative;
       z-index: 2;
     }
 
     .thought-title {
       font-family: 'Great Vibes', cursive;
-      font-size: 31pt;
+      font-size: clamp(1.8rem, 6.2vw, 2.5rem);
       color: var(--ocre-calido);
       text-align: center;
       font-weight: normal;
       line-height: 1.15;
-      margin-bottom: 5mm;
+      margin-bottom: 10px;
       position: relative;
       z-index: 2;
     }
 
     .thought-quote {
       font-family: 'Playfair Display', serif;
-      font-size: 12.5pt;
-      line-height: 1.7;
+      font-size: clamp(0.95rem, 3.4vw, 1.15rem);
+      line-height: 1.65;
       text-align: center;
       color: var(--azul-indigo);
-      padding: 0 4mm;
-      margin-bottom: 4mm;
+      padding: 0 4px;
+      margin-bottom: 10px;
       position: relative;
       z-index: 2;
     }
@@ -249,171 +278,364 @@
     .closing-quote {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 13.5pt;
-      line-height: 1.8;
+      font-size: clamp(1rem, 3.5vw, 1.25rem);
+      line-height: 1.75;
       text-align: center;
       color: var(--azul-indigo);
-      margin-bottom: 8mm;
+      margin-bottom: 14px;
       position: relative;
       z-index: 2;
     }
 
     .signature-script {
       font-family: 'Great Vibes', cursive;
-      font-size: 32pt;
+      font-size: clamp(2.2rem, 7vw, 2.8rem);
       color: var(--ocre-calido);
       text-align: center;
-      margin-top: 4mm;
+      margin-top: 6px;
       position: relative;
       z-index: 2;
     }
 
     .signature-formal {
       font-family: 'Lora', serif;
-      font-size: 9pt;
+      font-size: 0.85rem;
       letter-spacing: 1px;
       text-align: center;
       color: var(--azul-suave);
-      margin-top: 2mm;
+      margin-top: 4px;
       position: relative;
       z-index: 2;
+    }
+
+    /* Barra de navegación inferior */
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-top: 8px;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .ctrl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--azul-indigo);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-family: 'Lora', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s, background-color 0.2s;
+      touch-action: manipulation;
+    }
+
+    .ctrl-btn:hover:not(:disabled) {
+      background-color: var(--azul-suave);
+    }
+
+    .ctrl-btn:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .ctrl-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .ctrl-btn:focus-visible {
+      outline: 2px solid var(--ocre-calido);
+      outline-offset: 2px;
+    }
+
+    .page-indicator {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      color: var(--azul-indigo);
+      font-weight: 500;
+    }
+
+    /* MODO IMPRESIÓN (Preserva 100% el libro A5 original) */
+    @page {
+      size: 148mm 210mm;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: none;
+        display: block;
+      }
+      .reader-container {
+        display: block;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+      }
+      .carousel-track {
+        display: block;
+        overflow: visible;
+        gap: 0;
+      }
+      .carousel-controls {
+        display: none !important;
+      }
+      .page {
+        width: 148mm;
+        height: 210mm;
+        min-height: 210mm;
+        max-height: 210mm;
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 18mm 16mm;
+        page-break-after: always;
+      }
+      .page-cover {
+        padding: 0;
+      }
+      .page::before {
+        top: 8mm;
+        left: 8mm;
+        right: 8mm;
+        bottom: 8mm;
+        border-radius: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- PÁGINA 1: PORTADA -->
-  <section class="page page-cover">
-    <div class="cover-image-container">
-      <img src="portada-marielitos.png" alt="Retrato en acuarela de la abuelita Marielitos">
+  <main class="reader-container" aria-label="Lector del diario de Marielitos">
+    <div class="carousel-track" id="carouselTrack" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Páginas del diario">
+
+      <!-- PÁGINA 1: PORTADA -->
+      <section class="page page-cover" role="group" aria-roledescription="slide" aria-label="1 de 12">
+        <div class="cover-image-container">
+          <img src="portada-marielitos.png" alt="Retrato en acuarela de la abuelita Marielitos">
+        </div>
+        <div class="cover-text">
+          <p class="cover-kicker">El legado de amor de</p>
+          <h1 class="cover-title-script">Marielitos</h1>
+          <p class="cover-subtitle">Pensamientos y lecciones de vida de su diario.</p>
+          <div class="divider">♥</div>
+        </div>
+      </section>
+
+      <!-- PÁGINA 2: DEDICATORIA -->
+      <section class="page" role="group" aria-roledescription="slide" aria-label="2 de 12">
+        <h2 class="dedication-title">Para nuestra familia y seres queridos</h2>
+        <p class="dedication-text">
+          Mi madre dejó escritas en su diario las huellas de su corazón. Ella nos enseñó que la felicidad no está en tener mucho, sino en agradecerlo todo: desde el canto de un pájaro y el agua fresca de la mañana, hasta una tortilla hecha con cariño.<br><br>
+          Nos demostró que el estudio nos hace libres, que a los problemas de la vida se les hace frente con disciplina y bailando en la sala de la casa, y que todas las personas del mundo tienen exactamente el mismo valor.<br><br>
+          Para ella, cada persona que formó parte de su vida fue un milagro y su mayor alegría. Cada vez que nos esforcemos, ayudemos a quien lo necesite y sonriamos ante un nuevo día, el espíritu alegre de Marielitos seguirá vivo en todos nosotros.
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 3: PENSAMIENTO 1 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="3 de 12">
+        <img src="vineta-1.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento I</p>
+        <h2 class="thought-title">Agradece cada nuevo día</h2>
+        <p class="thought-quote">
+          «Abre los ojos dando gracias por estar viva; siente la alegría de existir en el aire que respiras, en el canto de los pájaros, en la lluvia que cae sobre el jardín y hasta en el abrazo del agua fría al bañarte por la mañana».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 4: PENSAMIENTO 2 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="4 de 12">
+        <img src="vineta-2.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento II</p>
+        <h2 class="thought-title">Recuerda que todos valemos igual</h2>
+        <p class="thought-quote">
+          «Nunca te sientas más que nadie: recuerda siempre que estamos hechos del mismo polvo y que la vida de cualquier persona tiene el mismo valor que la tuya».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 5: PENSAMIENTO 3 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="5 de 12">
+        <img src="vineta-3.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento III</p>
+        <h2 class="thought-title">Comparte tu pan con quien tiene hambre</h2>
+        <p class="thought-quote">
+          «Nunca niegues un plato de comida o un vaso de fresco a quien lo pida. Entrégalo con ternura, pues no existe una paz más hermosa al final del día que acostarse con la satisfacción de haber calmado el hambre de alguien más».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 6: PENSAMIENTO 4 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="6 de 12">
+        <img src="vineta-4.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento IV</p>
+        <h2 class="thought-title">No te encierres en cuatro paredes</h2>
+        <p class="thought-quote">
+          «No te encierres en paredes: mira a tu alrededor, saluda a tus vecinos, preocúpate por tus compañeros y tiende la mano a quien vive en soledad».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 7: PENSAMIENTO 5 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="7 de 12">
+        <img src="vineta-5.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento V</p>
+        <h2 class="thought-title">Trata con cariño a los abuelitos</h2>
+        <p class="thought-quote">
+          «Regala siempre una sonrisa, un dulce y una caricia a los ancianos; en el brillo de su mirada agradecida encontrarás las bendiciones más lindas para tu corazón».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 8: PENSAMIENTO 6 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="8 de 12">
+        <img src="vineta-6.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento VI</p>
+        <h2 class="thought-title">Pon el estudio en primer lugar</h2>
+        <p class="thought-quote">
+          «Para ti lo primero debe ser siempre el estudio; aunque cueste y toque aprender con libros prestados, esfuérzate por prepararte y no cambies tu futuro por un rato de paseo».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 9: PENSAMIENTO 7 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="9 de 12">
+        <img src="vineta-7.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento VII</p>
+        <h2 class="thought-title">Acepta las pruebas con valor y sin quejarte</h2>
+        <p class="thought-quote">
+          «Cuando la vida te ponga una prueba difícil, acéptala con valor y nada de protestar. Cuídate mucho, no pases pensando en tus males y, si no puedes salir a caminar, pon música o baila en la sala de tu casa».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 10: PENSAMIENTO 8 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="10 de 12">
+        <img src="vineta-8.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento VIII</p>
+        <h2 class="thought-title">Sé feliz con las cosas sencillas</h2>
+        <p class="thought-quote">
+          «No necesitas lujos para ser feliz: aprende a encontrar la belleza en las cosas sencillas de la vida, en un vestidito humilde hecho en casa y en el sabor de una tortilla palmeada por unas manos cariñosas».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 11: PENSAMIENTO 9 -->
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="11 de 12">
+        <img src="vineta-9.png" class="thought-bg-art" alt="">
+        <p class="thought-number">Pensamiento IX</p>
+        <h2 class="thought-title">Disfruta y cuida mucho a tu familia</h2>
+        <p class="thought-quote">
+          «Comparte siempre con tu familia en las alegrías y en los fracasos; aunque al final del día termines cansada, cocina con gusto, celebra cada cumpleaños y ayuda con paciencia, porque tenerlos cerca es el milagro más grande».
+        </p>
+        <div class="divider">♥</div>
+      </section>
+
+      <!-- PÁGINA 12: CONTRAPORTADA -->
+      <section class="page" role="group" aria-roledescription="slide" aria-label="12 de 12">
+        <p class="closing-quote">
+          «Haz de tu vida algo tan hermoso que algún día puedas decir: 'me siento realizada al recordar mi vida'. Y siempre dale las gracias al Padre Celestial por cada momento de dicha».
+        </p>
+        <div class="divider">♥</div>
+        <p class="signature-script">Marielitos</p>
+        <p class="signature-formal">María de los Ángeles Guzmán Núñez</p>
+      </section>
+
     </div>
-    <div class="cover-text">
-      <p class="cover-kicker">El legado de amor de</p>
-      <h1 class="cover-title-script">Marielitos</h1>
-      <p class="cover-subtitle">Pensamientos y lecciones de vida de su diario.</p>
-      <div class="divider">♥</div>
-    </div>
-  </section>
 
-  <!-- PÁGINA 2: DEDICATORIA -->
-  <section class="page">
-    <h2 class="dedication-title">Para nuestra familia y seres queridos</h2>
-    <p class="dedication-text">
-      Mi madre dejó escritas en su diario las huellas de su corazón. Ella nos enseñó que la felicidad no está en tener mucho, sino en agradecerlo todo: desde el canto de un pájaro y el agua fresca de la mañana, hasta una tortilla hecha con cariño.<br><br>
-      Nos demostró que el estudio nos hace libres, que a los problemas de la vida se les hace frente con disciplina y bailando en la sala de la casa, y que todas las personas del mundo tienen exactamente el mismo valor.<br><br>
-      Para ella, cada persona que formó parte de su vida fue un milagro y su mayor alegría. Cada vez que nos esforcemos, ayudemos a quien lo necesite y sonriamos ante un nuevo día, el espíritu alegre de Marielitos seguirá vivo en todos nosotros.
-    </p>
-    <div class="divider">♥</div>
-  </section>
+    <!-- Controles de navegación -->
+    <nav class="carousel-controls" aria-label="Navegación de páginas">
+      <button type="button" class="ctrl-btn" id="prevBtn" aria-label="Página anterior">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Anterior</span>
+      </button>
 
-  <!-- PÁGINA 3: PENSAMIENTO 1 -->
-  <section class="page thought-page">
-    <img src="vineta-1.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento I</p>
-    <h2 class="thought-title">Agradece cada nuevo día</h2>
-    <p class="thought-quote">
-      «Abre los ojos dando gracias por estar viva; siente la alegría de existir en el aire que respiras, en el canto de los pájaros, en la lluvia que cae sobre el jardín y hasta en el abrazo del agua fría al bañarte por la mañana».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      <span class="page-indicator" id="pageIndicator" aria-live="polite">Página 1 de 12</span>
 
-  <!-- PÁGINA 4: PENSAMIENTO 2 -->
-  <section class="page thought-page">
-    <img src="vineta-2.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento II</p>
-    <h2 class="thought-title">Recuerda que todos valemos igual</h2>
-    <p class="thought-quote">
-      «Nunca te sientas más que nadie: recuerda siempre que estamos hechos del mismo polvo y que la vida de cualquier persona tiene el mismo valor que la tuya».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      <button type="button" class="ctrl-btn" id="nextBtn" aria-label="Página siguiente">
+        <span>Siguiente</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </nav>
+  </main>
 
-  <!-- PÁGINA 5: PENSAMIENTO 3 -->
-  <section class="page thought-page">
-    <img src="vineta-3.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento III</p>
-    <h2 class="thought-title">Comparte tu pan con quien tiene hambre</h2>
-    <p class="thought-quote">
-      «Nunca niegues un plato de comida o un vaso de fresco a quien lo pida. Entrégalo con ternura, pues no existe una paz más hermosa al final del día que acostarse con la satisfacción de haber calmado el hambre de alguien más».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+  <script>
+    (function() {
+      const track = document.getElementById('carouselTrack');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const pageIndicator = document.getElementById('pageIndicator');
+      const slides = Array.from(track.querySelectorAll('.page'));
+      const totalSlides = slides.length;
 
-  <!-- PÁGINA 6: PENSAMIENTO 4 -->
-  <section class="page thought-page">
-    <img src="vineta-4.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento IV</p>
-    <h2 class="thought-title">No te encierres en cuatro paredes</h2>
-    <p class="thought-quote">
-      «No te encierres en paredes: mira a tu alrededor, saluda a tus vecinos, preocúpate por tus compañeros y tiende la mano a quien vive en soledad».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      function getSlideIndex() {
+        const scrollLeft = track.scrollLeft;
+        const slideWidth = track.clientWidth;
+        if (!slideWidth) return 0;
+        return Math.round(scrollLeft / slideWidth);
+      }
 
-  <!-- PÁGINA 7: PENSAMIENTO 5 -->
-  <section class="page thought-page">
-    <img src="vineta-5.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento V</p>
-    <h2 class="thought-title">Trata con cariño a los abuelitos</h2>
-    <p class="thought-quote">
-      «Regala siempre una sonrisa, un dulce y una caricia a los ancianos; en el brillo de su mirada agradecida encontrarás las bendiciones más lindas para tu corazón».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      function updateControls() {
+        const currentIndex = getSlideIndex();
+        pageIndicator.textContent = `Página ${currentIndex + 1} de ${totalSlides}`;
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === totalSlides - 1;
+      }
 
-  <!-- PÁGINA 8: PENSAMIENTO 6 -->
-  <section class="page thought-page">
-    <img src="vineta-6.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento VI</p>
-    <h2 class="thought-title">Pon el estudio en primer lugar</h2>
-    <p class="thought-quote">
-      «Para ti lo primero debe ser siempre el estudio; aunque cueste y toque aprender con libros prestados, esfuérzate por prepararte y no cambies tu futuro por un rato de paseo».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      function scrollToSlide(index) {
+        const targetIndex = Math.max(0, Math.min(totalSlides - 1, index));
+        const targetSlide = slides[targetIndex];
+        if (targetSlide) {
+          targetSlide.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          });
+        }
+      }
 
-  <!-- PÁGINA 9: PENSAMIENTO 7 -->
-  <section class="page thought-page">
-    <img src="vineta-7.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento VII</p>
-    <h2 class="thought-title">Acepta las pruebas con valor y sin quejarte</h2>
-    <p class="thought-quote">
-      «Cuando la vida te ponga una prueba difícil, acéptala con valor y nada de protestar. Cuídate mucho, no pases pensando en tus males y, si no puedes salir a caminar, pon música o baila en la sala de tu casa».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      prevBtn.addEventListener('click', function() {
+        const currentIndex = getSlideIndex();
+        scrollToSlide(currentIndex - 1);
+      });
 
-  <!-- PÁGINA 10: PENSAMIENTO 8 -->
-  <section class="page thought-page">
-    <img src="vineta-8.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento VIII</p>
-    <h2 class="thought-title">Sé feliz con las cosas sencillas</h2>
-    <p class="thought-quote">
-      «No necesitas lujos para ser feliz: aprende a encontrar la belleza en las cosas sencillas de la vida, en un vestidito humilde hecho en casa y en el sabor de una tortilla palmeada por unas manos cariñosas».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      nextBtn.addEventListener('click', function() {
+        const currentIndex = getSlideIndex();
+        scrollToSlide(currentIndex + 1);
+      });
 
-  <!-- PÁGINA 11: PENSAMIENTO 9 -->
-  <section class="page thought-page">
-    <img src="vineta-9.png" class="thought-bg-art" alt="">
-    <p class="thought-number">Pensamiento IX</p>
-    <h2 class="thought-title">Disfruta y cuida mucho a tu familia</h2>
-    <p class="thought-quote">
-      «Comparte siempre con tu familia en las alegrías y en los fracasos; aunque al final del día termines cansada, cocina con gusto, celebra cada cumpleaños y ayuda con paciencia, porque tenerlos cerca es el milagro más grande».
-    </p>
-    <div class="divider">♥</div>
-  </section>
+      // Navegación por teclado (Flechas izquierda y derecha)
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+          const currentIndex = getSlideIndex();
+          if (currentIndex > 0) scrollToSlide(currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+          const currentIndex = getSlideIndex();
+          if (currentIndex < totalSlides - 1) scrollToSlide(currentIndex + 1);
+        }
+      });
 
-  <!-- PÁGINA 12: CONTRAPORTADA -->
-  <section class="page">
-    <p class="closing-quote">
-      «Haz de tu vida algo tan hermoso que algún día puedas decir: 'me siento realizada al recordar mi vida'. Y siempre dale las gracias al Padre Celestial por cada momento de dicha».
-    </p>
-    <div class="divider">♥</div>
-    <p class="signature-script">Marielitos</p>
-    <p class="signature-formal">María de los Ángeles Guzmán Núñez</p>
-  </section>
+      // Evento de fin de scroll para actualizar el estado del contador y botones
+      if ('onscrollend' in window) {
+        track.addEventListener('scrollend', updateControls);
+      } else {
+        let scrollTimeout;
+        track.addEventListener('scroll', function() {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(updateControls, 80);
+        }, { passive: true });
+      }
 
+      updateControls();
+      window.addEventListener('resize', updateControls);
+    })();
+  </script>
 </body>
 </html>
