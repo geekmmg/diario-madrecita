@@ -138,8 +138,8 @@
       mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
     }
 
-    /* Capa de destellos dorados sutiles sobre el retrato */
-    .sparkles-layer {
+    /* Canvas de destellos dorados continuos y fluidos */
+    .sparkles-canvas {
       position: absolute;
       top: 0;
       left: 0;
@@ -147,71 +147,6 @@
       height: 100%;
       pointer-events: none;
       z-index: 2;
-      overflow: hidden;
-    }
-
-    .sparkle {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 252, 235, 0.95) 0%, rgba(225, 175, 105, 0.65) 45%, rgba(155, 86, 36, 0) 75%);
-      box-shadow: 0 0 7px rgba(255, 238, 175, 0.7);
-      opacity: 0;
-      will-change: transform, opacity;
-    }
-
-    /* Posicionamiento orgánico de los destellos */
-    .s-1  { left: 16%; bottom: 12%; width: 6px;  height: 6px;  }
-    .s-2  { left: 34%; bottom: 22%; width: 8px;  height: 8px;  }
-    .s-3  { left: 76%; bottom: 18%; width: 5px;  height: 5px;  }
-    .s-4  { left: 52%; bottom: 10%; width: 9px;  height: 9px;  }
-    .s-5  { left: 82%; bottom: 32%; width: 6px;  height: 6px;  }
-    .s-6  { left: 22%; bottom: 38%; width: 7px;  height: 7px;  }
-    .s-7  { left: 64%; bottom: 42%; width: 5px;  height: 5px;  }
-    .s-8  { left: 40%; bottom: 48%; width: 8px;  height: 8px;  }
-    .s-9  { left: 14%; bottom: 58%; width: 6px;  height: 6px;  }
-    .s-10 { left: 86%; bottom: 54%; width: 7px;  height: 7px;  }
-    .s-11 { left: 28%; bottom: 68%; width: 5px;  height: 5px;  }
-    .s-12 { left: 72%; bottom: 62%; width: 8px;  height: 8px;  }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .sparkle {
-        animation: sparkleFloat 8s ease-in-out infinite;
-      }
-      .s-1  { animation-duration: 7s;   animation-delay: 0s;   }
-      .s-2  { animation-duration: 9.5s; animation-delay: 1.5s; }
-      .s-3  { animation-duration: 6.5s; animation-delay: 3s;   }
-      .s-4  { animation-duration: 10s;  animation-delay: 0.8s; }
-      .s-5  { animation-duration: 8.5s; animation-delay: 2.2s; }
-      .s-6  { animation-duration: 7.5s; animation-delay: 4.1s; }
-      .s-7  { animation-duration: 9s;   animation-delay: 1.2s; }
-      .s-8  { animation-duration: 8s;   animation-delay: 3.5s; }
-      .s-9  { animation-duration: 11s;  animation-delay: 2s;   }
-      .s-10 { animation-duration: 7s;   animation-delay: 4.8s; }
-      .s-11 { animation-duration: 8.5s; animation-delay: 0.5s; }
-      .s-12 { animation-duration: 10s;  animation-delay: 2.7s; }
-    }
-
-    @keyframes sparkleFloat {
-      0% {
-        opacity: 0;
-        transform: translate3d(0, 0, 0) scale(0.6);
-      }
-      22% {
-        opacity: 0.85;
-        transform: translate3d(-5px, -20px, 0) scale(1.15);
-      }
-      50% {
-        opacity: 0.95;
-        transform: translate3d(7px, -50px, 0) scale(1);
-      }
-      78% {
-        opacity: 0.45;
-        transform: translate3d(-4px, -80px, 0) scale(0.85);
-      }
-      100% {
-        opacity: 0;
-        transform: translate3d(6px, -110px, 0) scale(0.5);
-      }
     }
 
     .cover-text {
@@ -568,7 +503,7 @@
       }
       .carousel-controls,
       .audio-toggle,
-      .sparkles-layer {
+      .sparkles-canvas {
         display: none !important;
       }
       .page {
@@ -622,20 +557,7 @@
       <section class="page page-cover" role="group" aria-roledescription="slide" aria-label="1 de 12">
         <div class="cover-image-container">
           <img src="portada-marielitos.png" alt="Retrato en acuarela de la abuelita Marielitos">
-          <div class="sparkles-layer" aria-hidden="true">
-            <span class="sparkle s-1"></span>
-            <span class="sparkle s-2"></span>
-            <span class="sparkle s-3"></span>
-            <span class="sparkle s-4"></span>
-            <span class="sparkle s-5"></span>
-            <span class="sparkle s-6"></span>
-            <span class="sparkle s-7"></span>
-            <span class="sparkle s-8"></span>
-            <span class="sparkle s-9"></span>
-            <span class="sparkle s-10"></span>
-            <span class="sparkle s-11"></span>
-            <span class="sparkle s-12"></span>
-          </div>
+          <canvas id="sparklesCanvas" class="sparkles-canvas" aria-hidden="true"></canvas>
         </div>
         <div class="cover-text">
           <p class="cover-kicker">El legado de amor de</p>
@@ -915,6 +837,129 @@
       window.addEventListener('click', onFirstInteraction, { once: true });
       window.addEventListener('touchstart', onFirstInteraction, { once: true });
       window.addEventListener('keydown', onFirstInteraction, { once: true });
+
+      // Sistema de destellos dorados fluidos y continuos (Canvas 60fps)
+      const canvas = document.getElementById('sparklesCanvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let animationFrameId = null;
+        let width = 0;
+        let height = 0;
+        const PARTICLE_COUNT = 32;
+        let particles = [];
+
+        function resizeCanvas() {
+          width = canvas.clientWidth;
+          height = canvas.clientHeight;
+          if (!width || !height) return;
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.scale(dpr, dpr);
+        }
+
+        function createParticle(initial) {
+          return {
+            x: Math.random() * width,
+            y: initial ? Math.random() * height : height + (Math.random() * 20 + 5),
+            size: Math.random() * 3.5 + 2.5, // Radio de 2.5px a 6px
+            speedY: Math.random() * 0.55 + 0.3, // Velocidad constante y fluida
+            speedX: (Math.random() - 0.5) * 0.25,
+            opacity: Math.random() * 0.5 + 0.4,
+            opacitySpeed: Math.random() * 0.012 + 0.006,
+            opacityDir: Math.random() > 0.5 ? 1 : -1,
+            sway: Math.random() * Math.PI * 2,
+            swaySpeed: Math.random() * 0.02 + 0.012
+          };
+        }
+
+        function initParticles() {
+          particles = [];
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(createParticle(true));
+          }
+        }
+
+        function renderFrame() {
+          ctx.clearRect(0, 0, width, height);
+
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+
+            // Movimiento armónico continuo
+            p.sway += p.swaySpeed;
+            p.y -= p.speedY;
+            p.x += Math.sin(p.sway) * 0.45 + p.speedX;
+
+            // Pulso orgánico de brillo
+            p.opacity += p.opacitySpeed * p.opacityDir;
+            if (p.opacity >= 0.95) {
+              p.opacityDir = -1;
+            } else if (p.opacity <= 0.25) {
+              p.opacityDir = 1;
+            }
+
+            // Reciclaje continuo al llegar arriba
+            if (p.y < -15) {
+              particles[i] = createParticle(false);
+              continue;
+            }
+            if (p.x < -15) p.x = width + 15;
+            if (p.x > width + 15) p.x = -15;
+
+            // Halo dorado exterior
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 232, 160, ' + p.opacity + ')';
+            ctx.shadowBlur = 9;
+            ctx.shadowColor = 'rgba(255, 195, 80, ' + (p.opacity * 0.85) + ')';
+            ctx.fill();
+
+            // Núcleo blanco cálido brillante
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 0.4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 240, ' + p.opacity + ')';
+            ctx.shadowBlur = 0;
+            ctx.fill();
+            ctx.restore();
+          }
+
+          animationFrameId = requestAnimationFrame(renderFrame);
+        }
+
+        function startLoop() {
+          if (!animationFrameId && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            animationFrameId = requestAnimationFrame(renderFrame);
+          }
+        }
+
+        function stopLoop() {
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          }
+        }
+
+        resizeCanvas();
+        initParticles();
+        startLoop();
+
+        window.addEventListener('resize', function() {
+          resizeCanvas();
+          if (particles.length === 0) initParticles();
+        });
+
+        // Apagar animación al navegar a otras páginas para no consumir batería
+        track.addEventListener('scroll', function() {
+          if (track.scrollLeft > track.clientWidth * 0.4) {
+            stopLoop();
+          } else {
+            startLoop();
+          }
+        }, { passive: true });
+      }
     })();
   </script>
 </body>
