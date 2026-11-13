@@ -78,15 +78,17 @@
       flex: 0 0 100%;
       width: 100%;
       max-width: 100%;
-      height: min(720px, calc(100dvh - 84px));
+      min-height: min(650px, calc(100dvh - 84px));
+      max-height: min(780px, calc(100dvh - 84px));
       background-color: var(--bg-crema);
       position: relative;
       overflow-y: auto;
       overflow-x: hidden;
+      overscroll-behavior-y: contain;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: clamp(1.2rem, 5vw, 2.2rem) clamp(1rem, 4.5vw, 1.8rem);
+      padding: clamp(1.4rem, 5vw, 2.4rem) clamp(1.2rem, 5vw, 2rem);
       box-shadow: 0 8px 24px rgba(28, 53, 77, 0.12);
       border-radius: 8px;
       scroll-snap-align: center;
@@ -145,7 +147,7 @@
 
     .cover-kicker {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+      font-size: clamp(0.85rem, 2.8vw, 1rem);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--azul-indigo);
@@ -154,7 +156,7 @@
 
     .cover-title-script {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(2.8rem, 9vw, 3.8rem);
+      font-size: clamp(3.4rem, 11vw, 4.6rem);
       color: var(--ocre-calido);
       line-height: 1.05;
       margin: 2px 0 6px 0;
@@ -164,7 +166,7 @@
     .cover-subtitle {
       font-family: 'Lora', serif;
       font-style: italic;
-      font-size: clamp(0.85rem, 2.8vw, 1rem);
+      font-size: clamp(1rem, 3.4vw, 1.2rem);
       color: var(--azul-indigo);
       line-height: 1.5;
       max-width: 90%;
@@ -177,9 +179,9 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin: 8px auto;
+      margin: 10px auto;
       color: var(--ocre-calido);
-      font-size: 0.9rem;
+      font-size: 1rem;
       position: relative;
       z-index: 2;
     }
@@ -187,7 +189,7 @@
     .divider::before,
     .divider::after {
       content: "";
-      width: 24px;
+      width: 28px;
       height: 0.7pt;
       background-color: var(--ocre-calido);
       opacity: 0.65;
@@ -196,17 +198,17 @@
     /* PÁGINA 2: DEDICATORIA */
     .dedication-title {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.9rem, 6.5vw, 2.5rem);
+      font-size: clamp(2.3rem, 7.8vw, 3.2rem);
       color: var(--ocre-calido);
       text-align: center;
       font-weight: normal;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       position: relative;
       z-index: 2;
     }
 
     .dedication-text {
-      font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+      font-size: clamp(1.08rem, 3.8vw, 1.25rem);
       line-height: 1.75;
       text-align: center;
       color: var(--azul-indigo);
@@ -217,19 +219,18 @@
 
     /* PÁGINAS 3 A 11: PENSAMIENTOS CON ACUARELA */
     .thought-page {
-      justify-content: flex-start;
-      padding-top: clamp(1.8rem, 6vw, 2.8rem);
+      justify-content: center;
       position: relative;
     }
 
     .thought-bg-art {
       position: absolute;
-      bottom: 16px;
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
       width: min(85%, 260px);
-      max-height: 45%;
-      opacity: 0.22;
+      max-height: 40%;
+      opacity: 0.18;
       pointer-events: none;
       z-index: 1;
       object-fit: contain;
@@ -240,36 +241,36 @@
 
     .thought-number {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(0.75rem, 2.4vw, 0.85rem);
+      font-size: clamp(0.85rem, 2.8vw, 1rem);
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--ocre-calido);
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       position: relative;
       z-index: 2;
     }
 
     .thought-title {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.8rem, 6.2vw, 2.5rem);
+      font-size: clamp(2.4rem, 8.5vw, 3.4rem);
       color: var(--ocre-calido);
       text-align: center;
       font-weight: normal;
       line-height: 1.15;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       position: relative;
       z-index: 2;
     }
 
     .thought-quote {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(0.95rem, 3.4vw, 1.15rem);
+      font-size: clamp(1.2rem, 4.4vw, 1.45rem);
       line-height: 1.65;
       text-align: center;
       color: var(--azul-indigo);
-      padding: 0 4px;
-      margin-bottom: 10px;
+      padding: 0 6px;
+      margin-bottom: 12px;
       position: relative;
       z-index: 2;
     }
@@ -278,28 +279,28 @@
     .closing-quote {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(1rem, 3.5vw, 1.25rem);
+      font-size: clamp(1.25rem, 4.6vw, 1.55rem);
       line-height: 1.75;
       text-align: center;
       color: var(--azul-indigo);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       position: relative;
       z-index: 2;
     }
 
     .signature-script {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(2.2rem, 7vw, 2.8rem);
+      font-size: clamp(2.8rem, 9vw, 3.6rem);
       color: var(--ocre-calido);
       text-align: center;
-      margin-top: 6px;
+      margin-top: 8px;
       position: relative;
       z-index: 2;
     }
 
     .signature-formal {
       font-family: 'Lora', serif;
-      font-size: 0.85rem;
+      font-size: clamp(0.95rem, 3vw, 1.05rem);
       letter-spacing: 1px;
       text-align: center;
       color: var(--azul-suave);
