@@ -393,15 +393,15 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: rgba(247, 242, 235, 0.9);
+      background: rgba(247, 242, 235, 0.92);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(155, 86, 36, 0.28);
+      border: 1px solid rgba(155, 86, 36, 0.32);
       color: var(--azul-indigo);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 20px;
       font-family: 'Lora', serif;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       letter-spacing: 0.5px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(28, 53, 77, 0.08);
@@ -420,9 +420,41 @@
       outline-offset: 2px;
     }
 
+    .audio-toggle .music-icon {
+      font-size: 0.95rem;
+      color: var(--ocre-calido);
+      line-height: 1;
+    }
+
+    /* En pausa: suave latido de luz para invitar a activarlo */
+    .audio-toggle.is-paused {
+      border-color: rgba(155, 86, 36, 0.45);
+      animation: gentleInvitePulse 2.4s ease-in-out infinite;
+    }
+
+    .audio-toggle.is-paused .eq-bars {
+      display: none;
+    }
+
+    .audio-toggle.is-paused .music-icon {
+      display: inline-block;
+    }
+
+    @keyframes gentleInvitePulse {
+      0%, 100% {
+        box-shadow: 0 4px 12px rgba(28, 53, 77, 0.08), 0 0 0 0 rgba(197, 137, 88, 0);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 4px 14px rgba(28, 53, 77, 0.12), 0 0 12px 2px rgba(197, 137, 88, 0.38);
+        border-color: var(--ocre-calido);
+        transform: scale(1.02);
+      }
+    }
+
     /* Barritas ecualizadoras sutiles */
     .eq-bars {
-      display: inline-flex;
+      display: none;
       align-items: flex-end;
       gap: 2.5px;
       height: 13px;
@@ -440,7 +472,20 @@
     .eq-bars .bar-2 { height: 8px; }
     .eq-bars .bar-3 { height: 5px; }
 
-    /* Animación viva cuando está reproduciendo */
+    /* Estado activo / sonando */
+    .audio-toggle.is-playing {
+      animation: none;
+      border-color: rgba(155, 86, 36, 0.28);
+    }
+
+    .audio-toggle.is-playing .music-icon {
+      display: none;
+    }
+
+    .audio-toggle.is-playing .eq-bars {
+      display: inline-flex;
+    }
+
     .audio-toggle.is-playing .bar-1 {
       animation: eqPulse1 1s ease-in-out infinite alternate;
     }
@@ -462,16 +507,6 @@
     @keyframes eqPulse3 {
       0% { height: 4px; }
       100% { height: 13px; }
-    }
-
-    /* Estado silenciado/pausado */
-    .audio-toggle.is-paused {
-      opacity: 0.72;
-    }
-    .audio-toggle.is-paused .bar {
-      opacity: 0.4;
-      height: 3px !important;
-      animation: none !important;
     }
 
     /* MODO IMPRESIÓN (Preserva 100% el libro A5 original) */
@@ -542,13 +577,14 @@
   <main class="reader-container" aria-label="Lector del diario de Marielitos">
     <!-- Audio de fondo y control flotante sutil -->
     <audio id="bgAudio" src="musica.mp3" loop preload="auto"></audio>
-    <button type="button" class="audio-toggle is-paused" id="audioToggle" aria-label="Reproducir música ambiental" aria-pressed="false">
+    <button type="button" class="audio-toggle is-paused" id="audioToggle" aria-label="Activar música ambiental" aria-pressed="false">
+      <span class="music-icon" aria-hidden="true">♪</span>
       <span class="eq-bars" aria-hidden="true">
         <span class="bar bar-1"></span>
         <span class="bar bar-2"></span>
         <span class="bar bar-3"></span>
       </span>
-      <span class="audio-label" id="audioLabel">Música</span>
+      <span class="audio-label" id="audioLabel">Activar música</span>
     </button>
 
     <div class="carousel-track" id="carouselTrack" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Páginas del diario">
@@ -800,8 +836,8 @@
             audioToggle.classList.add('is-paused');
             audioToggle.classList.remove('is-playing');
             audioToggle.setAttribute('aria-pressed', 'false');
-            audioToggle.setAttribute('aria-label', 'Reproducir música ambiental');
-            audioLabel.textContent = 'Música';
+            audioToggle.setAttribute('aria-label', 'Activar música ambiental');
+            audioLabel.textContent = 'Activar música';
           });
         }
       }
@@ -811,8 +847,8 @@
         audioToggle.classList.add('is-paused');
         audioToggle.classList.remove('is-playing');
         audioToggle.setAttribute('aria-pressed', 'false');
-        audioToggle.setAttribute('aria-label', 'Reproducir música ambiental');
-        audioLabel.textContent = 'Silenciado';
+        audioToggle.setAttribute('aria-label', 'Activar música ambiental');
+        audioLabel.textContent = 'Activar música';
       }
 
       audioToggle.addEventListener('click', function(e) {
