@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El legado de amor de la abuelita Marielitos</title>
+  <!-- Tipografías de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-crema: #F7F2EB;
+      --azul-indigo: #1C354D;
+      --azul-suave: #4A6B88;
+      --ocre-calido: #9B5624;
+      --ocre-claro: #C88A58;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #E2DCD3;
+      font-family: 'Lora', serif;
+      color: var(--azul-indigo);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Configuración exacta para exportar a PDF (Libro A5 vertical) */
+    @page {
+      size: 148mm 210mm;
+      margin: 0;
+    }
+
+    .page {
+      width: 148mm;
+      height: 210mm;
+      background-color: var(--bg-crema);
+      margin: 20px auto;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 18mm 16mm;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      page-break-after: always;
+      /* Textura sutil de papel acuarela */
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(155, 86, 36, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(28, 53, 77, 0.06) 0px, transparent 50%);
+    }
+
+    @media print {
+      body {
+        background: none;
+      }
+      .page {
+        margin: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* Marco decorativo sutil interior */
+    .page::before {
+      content: "";
+      position: absolute;
+      top: 8mm;
+      left: 8mm;
+      right: 8mm;
+      bottom: 8mm;
+      border: 0.5pt solid rgba(155, 86, 36, 0.22);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* PÁGINA 1: PORTADA */
+    .page-cover {
+      padding: 0;
+      justify-content: flex-end;
+    }
+
+    .cover-image-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 68%;
+      overflow: hidden;
+    }
+
+    .cover-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 15%;
+      -webkit-mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
+    }
+
+    .cover-text {
+      position: relative;
+      z-index: 4;
+      text-align: center;
+      padding: 0 14mm 16mm 14mm;
+      background: linear-gradient(to top, var(--bg-crema) 75%, transparent 100%);
+    }
+
+    .cover-kicker {
+      font-family: 'Playfair Display', serif;
+      font-size: 11pt;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--azul-indigo);
+      margin-bottom: 2mm;
+    }
+
+    .cover-title-script {
+      font-family: 'Great Vibes', cursive;
+      font-size: 42pt;
+      color: var(--ocre-calido);
+      line-height: 1.05;
+      margin: 1mm 0 3mm 0;
+      font-weight: normal;
+    }
+
+    .cover-subtitle {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 10.5pt;
+      color: var(--azul-indigo);
+      line-height: 1.5;
+      max-width: 95mm;
+      margin: 0 auto 4mm auto;
+    }
+
+    /* Ornamento del corazón */
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 4mm auto;
+      color: var(--ocre-calido);
+      font-size: 10pt;
+      position: relative;
+      z-index: 2;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      width: 22mm;
+      height: 0.7pt;
+      background-color: var(--ocre-calido);
+      opacity: 0.65;
+    }
+
+    /* PÁGINA 2: DEDICATORIA */
+    .dedication-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 30pt;
+      color: var(--ocre-calido);
+      text-align: center;
+      font-weight: normal;
+      margin-bottom: 6mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dedication-text {
+      font-size: 11pt;
+      line-height: 1.85;
+      text-align: center;
+      color: var(--azul-indigo);
+      font-style: italic;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* PÁGINAS 3 A 11: PENSAMIENTOS CON ACUARELA DE FONDO ARTÍSTICO (SIN TOCAR EL TEXTO) */
+    .thought-page {
+      justify-content: flex-start;
+      padding-top: 18mm;
+      position: relative;
+    }
+
+    /* Efecto original de acuarela grande de fondo, ubicada abajo-centro y sutil para no estorbar */
+    .thought-bg-art {
+      position: absolute;
+      bottom: 10mm;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100mm;
+      height: 90mm;
+      opacity: 0.22; /* Sutil y elegante marca de agua */
+      pointer-events: none;
+      z-index: 1;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      /* Difumina los bordes para que se funda delicadamente con el papel crema */
+      -webkit-mask-image: radial-gradient(circle at 50% 55%, black 45%, transparent 75%);
+      mask-image: radial-gradient(circle at 50% 55%, black 45%, transparent 75%);
+    }
+
+    .thought-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 9.5pt;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ocre-calido);
+      text-align: center;
+      margin-bottom: 2mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .thought-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 31pt;
+      color: var(--ocre-calido);
+      text-align: center;
+      font-weight: normal;
+      line-height: 1.15;
+      margin-bottom: 5mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .thought-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 12.5pt;
+      line-height: 1.7;
+      text-align: center;
+      color: var(--azul-indigo);
+      padding: 0 4mm;
+      margin-bottom: 4mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* PÁGINA 12: CONTRAPORTADA */
+    .closing-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13.5pt;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--azul-indigo);
+      margin-bottom: 8mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .signature-script {
+      font-family: 'Great Vibes', cursive;
+      font-size: 32pt;
+      color: var(--ocre-calido);
+      text-align: center;
+      margin-top: 4mm;
+      position: relative;
+      z-index: 2;
+    }
+
+    .signature-formal {
+      font-family: 'Lora', serif;
+      font-size: 9pt;
+      letter-spacing: 1px;
+      text-align: center;
+      color: var(--azul-suave);
+      margin-top: 2mm;
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PÁGINA 1: PORTADA -->
+  <section class="page page-cover">
+    <div class="cover-image-container">
+      <img src="portada-marielitos.png" alt="Retrato en acuarela de la abuelita Marielitos">
+    </div>
+    <div class="cover-text">
+      <p class="cover-kicker">El legado de amor de</p>
+      <h1 class="cover-title-script">Marielitos</h1>
+      <p class="cover-subtitle">Pensamientos y lecciones de vida de su diario.</p>
+      <div class="divider">♥</div>
+    </div>
+  </section>
+
+  <!-- PÁGINA 2: DEDICATORIA -->
+  <section class="page">
+    <h2 class="dedication-title">Para nuestra familia y seres queridos</h2>
+    <p class="dedication-text">
+      Mi madre dejó escritas en su diario las huellas de su corazón. Ella nos enseñó que la felicidad no está en tener mucho, sino en agradecerlo todo: desde el canto de un pájaro y el agua fresca de la mañana, hasta una tortilla hecha con cariño.<br><br>
+      Nos demostró que el estudio nos hace libres, que a los problemas de la vida se les hace frente con disciplina y bailando en la sala de la casa, y que todas las personas del mundo tienen exactamente el mismo valor.<br><br>
+      Para ella, cada persona que formó parte de su vida fue un milagro y su mayor alegría. Cada vez que nos esforcemos, ayudemos a quien lo necesite y sonriamos ante un nuevo día, el espíritu alegre de Marielitos seguirá vivo en todos nosotros.
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 3: PENSAMIENTO 1 -->
+  <section class="page thought-page">
+    <img src="vineta-1.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento I</p>
+    <h2 class="thought-title">Agradece cada nuevo día</h2>
+    <p class="thought-quote">
+      «Abre los ojos dando gracias por estar viva; siente la alegría de existir en el aire que respiras, en el canto de los pájaros, en la lluvia que cae sobre el jardín y hasta en el abrazo del agua fría al bañarte por la mañana».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 4: PENSAMIENTO 2 -->
+  <section class="page thought-page">
+    <img src="vineta-2.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento II</p>
+    <h2 class="thought-title">Recuerda que todos valemos igual</h2>
+    <p class="thought-quote">
+      «Nunca te sientas más que nadie: recuerda siempre que estamos hechos del mismo polvo y que la vida de cualquier persona tiene el mismo valor que la tuya».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 5: PENSAMIENTO 3 -->
+  <section class="page thought-page">
+    <img src="vineta-3.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento III</p>
+    <h2 class="thought-title">Comparte tu pan con quien tiene hambre</h2>
+    <p class="thought-quote">
+      «Nunca niegues un plato de comida o un vaso de fresco a quien lo pida. Entrégalo con ternura, pues no existe una paz más hermosa al final del día que acostarse con la satisfacción de haber calmado el hambre de alguien más».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 6: PENSAMIENTO 4 -->
+  <section class="page thought-page">
+    <img src="vineta-4.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento IV</p>
+    <h2 class="thought-title">No te encierres en cuatro paredes</h2>
+    <p class="thought-quote">
+      «No te encierres en paredes: mira a tu alrededor, saluda a tus vecinos, preocúpate por tus compañeros y tiende la mano a quien vive en soledad».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 7: PENSAMIENTO 5 -->
+  <section class="page thought-page">
+    <img src="vineta-5.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento V</p>
+    <h2 class="thought-title">Trata con cariño a los abuelitos</h2>
+    <p class="thought-quote">
+      «Regala siempre una sonrisa, un dulce y una caricia a los ancianos; en el brillo de su mirada agradecida encontrarás las bendiciones más lindas para tu corazón».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 8: PENSAMIENTO 6 -->
+  <section class="page thought-page">
+    <img src="vineta-6.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento VI</p>
+    <h2 class="thought-title">Pon el estudio en primer lugar</h2>
+    <p class="thought-quote">
+      «Para ti lo primero debe ser siempre el estudio; aunque cueste y toque aprender con libros prestados, esfuérzate por prepararte y no cambies tu futuro por un rato de paseo».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 9: PENSAMIENTO 7 -->
+  <section class="page thought-page">
+    <img src="vineta-7.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento VII</p>
+    <h2 class="thought-title">Acepta las pruebas con valor y sin quejarte</h2>
+    <p class="thought-quote">
+      «Cuando la vida te ponga una prueba difícil, acéptala con valor y nada de protestar. Cuídate mucho, no pases pensando en tus males y, si no puedes salir a caminar, pon música o baila en la sala de tu casa».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 10: PENSAMIENTO 8 -->
+  <section class="page thought-page">
+    <img src="vineta-8.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento VIII</p>
+    <h2 class="thought-title">Sé feliz con las cosas sencillas</h2>
+    <p class="thought-quote">
+      «No necesitas lujos para ser feliz: aprende a encontrar la belleza en las cosas sencillas de la vida, en un vestidito humilde hecho en casa y en el sabor de una tortilla palmeada por unas manos cariñosas».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 11: PENSAMIENTO 9 -->
+  <section class="page thought-page">
+    <img src="vineta-9.png" class="thought-bg-art" alt="">
+    <p class="thought-number">Pensamiento IX</p>
+    <h2 class="thought-title">Disfruta y cuida mucho a tu familia</h2>
+    <p class="thought-quote">
+      «Comparte siempre con tu familia en las alegrías y en los fracasos; aunque al final del día termines cansada, cocina con gusto, celebra cada cumpleaños y ayuda con paciencia, porque tenerlos cerca es el milagro más grande».
+    </p>
+    <div class="divider">♥</div>
+  </section>
+
+  <!-- PÁGINA 12: CONTRAPORTADA -->
+  <section class="page">
+    <p class="closing-quote">
+      «Haz de tu vida algo tan hermoso que algún día puedas decir: 'me siento realizada al recordar mi vida'. Y siempre dale las gracias al Padre Celestial por cada momento de dicha».
+    </p>
+    <div class="divider">♥</div>
+    <p class="signature-script">Marielitos</p>
+    <p class="signature-formal">María de los Ángeles Guzmán Núñez</p>
+  </section>
+
+</body>
+</html>
