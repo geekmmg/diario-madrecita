@@ -37,6 +37,7 @@
 
     /* Contenedor principal adaptable */
     .reader-container {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -362,6 +363,96 @@
       font-weight: 500;
     }
 
+    /* Botón flotante e indicador sutil de música */
+    .audio-toggle {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(247, 242, 235, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(155, 86, 36, 0.28);
+      color: var(--azul-indigo);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-family: 'Lora', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(28, 53, 77, 0.1);
+      transition: all 0.25s ease;
+      touch-action: manipulation;
+    }
+
+    .audio-toggle:hover {
+      background: rgba(247, 242, 235, 0.98);
+      border-color: var(--ocre-calido);
+      transform: translateY(-1px);
+    }
+
+    .audio-toggle:focus-visible {
+      outline: 2px solid var(--ocre-calido);
+      outline-offset: 2px;
+    }
+
+    /* Barritas ecualizadoras sutiles */
+    .eq-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 13px;
+      width: 13px;
+    }
+
+    .eq-bars .bar {
+      width: 2.5px;
+      background-color: var(--ocre-calido);
+      border-radius: 2px;
+      transition: height 0.2s ease, opacity 0.2s ease;
+    }
+
+    .eq-bars .bar-1 { height: 4px; }
+    .eq-bars .bar-2 { height: 8px; }
+    .eq-bars .bar-3 { height: 5px; }
+
+    /* Animación viva cuando está reproduciendo */
+    .audio-toggle.is-playing .bar-1 {
+      animation: eqPulse1 1s ease-in-out infinite alternate;
+    }
+    .audio-toggle.is-playing .bar-2 {
+      animation: eqPulse2 1.2s ease-in-out infinite alternate 0.2s;
+    }
+    .audio-toggle.is-playing .bar-3 {
+      animation: eqPulse3 0.9s ease-in-out infinite alternate 0.4s;
+    }
+
+    @keyframes eqPulse1 {
+      0% { height: 3px; }
+      100% { height: 11px; }
+    }
+    @keyframes eqPulse2 {
+      0% { height: 12px; }
+      100% { height: 4px; }
+    }
+    @keyframes eqPulse3 {
+      0% { height: 4px; }
+      100% { height: 13px; }
+    }
+
+    /* Estado silenciado/pausado */
+    .audio-toggle.is-paused {
+      opacity: 0.72;
+    }
+    .audio-toggle.is-paused .bar {
+      opacity: 0.4;
+      height: 3px !important;
+      animation: none !important;
+    }
+
     /* MODO IMPRESIÓN (Preserva 100% el libro A5 original) */
     @page {
       size: 148mm 210mm;
@@ -384,7 +475,8 @@
         overflow: visible;
         gap: 0;
       }
-      .carousel-controls {
+      .carousel-controls,
+      .audio-toggle {
         display: none !important;
       }
       .page {
@@ -414,6 +506,17 @@
 <body>
 
   <main class="reader-container" aria-label="Lector del diario de Marielitos">
+    <!-- Audio de fondo y control flotante sutil -->
+    <audio id="bgAudio" src="musica.mp3" loop preload="auto"></audio>
+    <button type="button" class="audio-toggle is-paused" id="audioToggle" aria-label="Reproducir música ambiental" aria-pressed="false">
+      <span class="eq-bars" aria-hidden="true">
+        <span class="bar bar-1"></span>
+        <span class="bar bar-2"></span>
+        <span class="bar bar-3"></span>
+      </span>
+      <span class="audio-label" id="audioLabel">Música</span>
+    </button>
+
     <div class="carousel-track" id="carouselTrack" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Páginas del diario">
 
       <!-- PÁGINA 1: PORTADA -->
@@ -636,6 +739,69 @@
 
       updateControls();
       window.addEventListener('resize', updateControls);
+
+      // Control de audio ambiental
+      const bgAudio = document.getElementById('bgAudio');
+      const audioToggle = document.getElementById('audioToggle');
+      const audioLabel = document.getElementById('audioLabel');
+      let userHasInteracted = false;
+      let userManuallyPaused = false;
+
+      // Volumen ambiental suave (40%)
+      bgAudio.volume = 0.4;
+
+      function startAudio() {
+        if (userManuallyPaused) return;
+        const playPromise = bgAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(function() {
+            audioToggle.classList.remove('is-paused');
+            audioToggle.classList.add('is-playing');
+            audioToggle.setAttribute('aria-pressed', 'true');
+            audioToggle.setAttribute('aria-label', 'Silenciar música ambiental');
+            audioLabel.textContent = 'Música';
+          }).catch(function() {
+            // Navegador bloqueó autoplay antes de interacción directa
+            audioToggle.classList.add('is-paused');
+            audioToggle.classList.remove('is-playing');
+            audioToggle.setAttribute('aria-pressed', 'false');
+            audioToggle.setAttribute('aria-label', 'Reproducir música ambiental');
+            audioLabel.textContent = 'Música';
+          });
+        }
+      }
+
+      function pauseAudio() {
+        bgAudio.pause();
+        audioToggle.classList.add('is-paused');
+        audioToggle.classList.remove('is-playing');
+        audioToggle.setAttribute('aria-pressed', 'false');
+        audioToggle.setAttribute('aria-label', 'Reproducir música ambiental');
+        audioLabel.textContent = 'Silenciado';
+      }
+
+      audioToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (bgAudio.paused) {
+          userManuallyPaused = false;
+          startAudio();
+        } else {
+          userManuallyPaused = true;
+          pauseAudio();
+        }
+      });
+
+      // Iniciar suavemente ante la primera interacción con el diario
+      function onFirstInteraction() {
+        if (!userHasInteracted) {
+          userHasInteracted = true;
+          startAudio();
+        }
+      }
+
+      window.addEventListener('click', onFirstInteraction, { once: true });
+      window.addEventListener('touchstart', onFirstInteraction, { once: true });
+      window.addEventListener('keydown', onFirstInteraction, { once: true });
     })();
   </script>
 </body>
