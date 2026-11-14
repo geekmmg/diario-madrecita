@@ -290,66 +290,84 @@
       z-index: 2;
     }
 
-    /* PÁGINA 12: CONTRAPORTADA CON FOTO */
-    .page-closing {
+    /* PÁGINA 12: HOMENAJE - FOTO EN PANTALLA COMPLETA */
+    .page-tribute-photo {
+      padding: clamp(65px, 9vh, 85px) clamp(16px, 4vw, 24px) clamp(75px, 10vh, 95px) clamp(16px, 4vw, 24px);
       justify-content: center;
-      gap: clamp(8px, 1.8vh, 14px);
+      align-items: center;
+      gap: 12px;
     }
 
-    .closing-photo-container {
-      width: min(92%, 360px);
-      max-height: clamp(170px, 26vh, 230px);
+    .tribute-photo-wrapper {
+      width: 100%;
+      max-width: 540px;
+      flex: 1;
+      max-height: calc(100dvh - 160px);
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0 auto;
+      position: relative;
+    }
+
+    .tribute-photo {
+      width: 100%;
+      height: 100%;
+      max-height: calc(100dvh - 170px);
+      object-fit: contain;
+      border-radius: 8px;
+      filter: drop-shadow(0 6px 20px rgba(155, 86, 36, 0.18));
+      /* Difuminado suave de bordes que se funde con el papel crema */
+      -webkit-mask-image: radial-gradient(ellipse at center, black 72%, transparent 98%);
+      mask-image: radial-gradient(ellipse at center, black 72%, transparent 98%);
+    }
+
+    .tribute-caption {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+      color: var(--ocre-calido);
+      text-align: center;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
       position: relative;
       z-index: 2;
     }
 
-    .closing-photo {
-      width: 100%;
-      height: 100%;
-      max-height: clamp(170px, 26vh, 230px);
-      object-fit: contain;
-      border-radius: 6px;
-      /* Fusión orgánica de acuarela con el papel crema */
-      -webkit-mask-image: radial-gradient(ellipse at center, black 65%, transparent 98%);
-      mask-image: radial-gradient(ellipse at center, black 65%, transparent 98%);
-      filter: drop-shadow(0 4px 14px rgba(155, 86, 36, 0.15));
+    /* PÁGINA 13: CONTRAPORTADA */
+    .page-closing {
+      justify-content: center;
     }
 
     .closing-quote {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(1.05rem, 3.8vw, 1.35rem);
-      line-height: 1.65;
+      font-size: clamp(1.25rem, 4.6vw, 1.6rem);
+      line-height: 1.75;
       text-align: center;
       color: var(--azul-indigo);
-      max-width: 440px;
-      margin: 0 auto;
-      padding: 0 4px;
+      max-width: 480px;
+      margin: 0 auto 18px auto;
       position: relative;
       z-index: 2;
     }
 
     .signature-script {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(2.4rem, 8vw, 3.2rem);
+      font-size: clamp(2.8rem, 9vw, 3.8rem);
       color: var(--ocre-calido);
       text-align: center;
-      margin-top: 2px;
+      margin-top: 8px;
       position: relative;
       z-index: 2;
     }
 
     .signature-formal {
       font-family: 'Lora', serif;
-      font-size: clamp(0.85rem, 2.6vw, 0.95rem);
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
       letter-spacing: 1px;
       text-align: center;
       color: var(--azul-suave);
-      margin-top: 2px;
+      margin-top: 4px;
       position: relative;
       z-index: 2;
     }
@@ -585,6 +603,12 @@
       .page-cover {
         padding: 0;
       }
+      .tribute-photo-wrapper {
+        max-height: 140mm;
+      }
+      .tribute-photo {
+        max-height: 135mm;
+      }
       .page::before {
         display: block;
         content: "";
@@ -619,7 +643,7 @@
     <div class="carousel-track" id="carouselTrack" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Páginas del diario">
 
       <!-- PÁGINA 1: PORTADA -->
-      <section class="page page-cover" role="group" aria-roledescription="slide" aria-label="1 de 12">
+      <section class="page page-cover" role="group" aria-roledescription="slide" aria-label="1 de 13">
         <div class="cover-image-container">
           <img src="portada-marielitos.png" alt="Retrato en acuarela de la abuelita Marielitos">
           <canvas id="sparklesCanvas" class="sparkles-canvas" aria-hidden="true"></canvas>
@@ -633,7 +657,7 @@
       </section>
 
       <!-- PÁGINA 2: DEDICATORIA -->
-      <section class="page" role="group" aria-roledescription="slide" aria-label="2 de 12">
+      <section class="page" role="group" aria-roledescription="slide" aria-label="2 de 13">
         <h2 class="dedication-title">Para nuestra familia y seres queridos</h2>
         <p class="dedication-text">
           Mi madre dejó escritas en su diario las huellas de su corazón. Ella nos enseñó que la felicidad no está en tener mucho, sino en agradecerlo todo: desde el canto de un pájaro y el agua fresca de la mañana, hasta una tortilla hecha con cariño.<br><br>
@@ -644,7 +668,7 @@
       </section>
 
       <!-- PÁGINA 3: PENSAMIENTO 1 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="3 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="3 de 13">
         <img src="vineta-1.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento I</p>
         <h2 class="thought-title">Agradece cada nuevo día</h2>
@@ -655,7 +679,7 @@
       </section>
 
       <!-- PÁGINA 4: PENSAMIENTO 2 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="4 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="4 de 13">
         <img src="vineta-2.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento II</p>
         <h2 class="thought-title">Recuerda que todos valemos igual</h2>
@@ -666,7 +690,7 @@
       </section>
 
       <!-- PÁGINA 5: PENSAMIENTO 3 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="5 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="5 de 13">
         <img src="vineta-3.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento III</p>
         <h2 class="thought-title">Comparte tu pan con quien tiene hambre</h2>
@@ -677,7 +701,7 @@
       </section>
 
       <!-- PÁGINA 6: PENSAMIENTO 4 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="6 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="6 de 13">
         <img src="vineta-4.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento IV</p>
         <h2 class="thought-title">No te encierres en cuatro paredes</h2>
@@ -688,7 +712,7 @@
       </section>
 
       <!-- PÁGINA 7: PENSAMIENTO 5 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="7 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="7 de 13">
         <img src="vineta-5.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento V</p>
         <h2 class="thought-title">Trata con cariño a los abuelitos</h2>
@@ -699,7 +723,7 @@
       </section>
 
       <!-- PÁGINA 8: PENSAMIENTO 6 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="8 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="8 de 13">
         <img src="vineta-6.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento VI</p>
         <h2 class="thought-title">Pon el estudio en primer lugar</h2>
@@ -710,7 +734,7 @@
       </section>
 
       <!-- PÁGINA 9: PENSAMIENTO 7 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="9 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="9 de 13">
         <img src="vineta-7.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento VII</p>
         <h2 class="thought-title">Acepta las pruebas con valor y sin quejarte</h2>
@@ -721,7 +745,7 @@
       </section>
 
       <!-- PÁGINA 10: PENSAMIENTO 8 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="10 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="10 de 13">
         <img src="vineta-8.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento VIII</p>
         <h2 class="thought-title">Sé feliz con las cosas sencillas</h2>
@@ -732,7 +756,7 @@
       </section>
 
       <!-- PÁGINA 11: PENSAMIENTO 9 -->
-      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="11 de 12">
+      <section class="page thought-page" role="group" aria-roledescription="slide" aria-label="11 de 13">
         <img src="vineta-9.png" class="thought-bg-art" alt="">
         <p class="thought-number">Pensamiento IX</p>
         <h2 class="thought-title">Disfruta y cuida mucho a tu familia</h2>
@@ -742,11 +766,16 @@
         <div class="divider">♥</div>
       </section>
 
-      <!-- PÁGINA 12: CONTRAPORTADA -->
-      <section class="page page-closing" role="group" aria-roledescription="slide" aria-label="12 de 12">
-        <div class="closing-photo-container">
-          <img src="marielitos-alegria.jpg" class="closing-photo" alt="Retrato de Marielitos bailando con un pañuelo blanco">
+      <!-- PÁGINA 12: HOMENAJE - MARIELITOS BAILANDO -->
+      <section class="page page-tribute-photo" role="group" aria-roledescription="slide" aria-label="12 de 13">
+        <div class="tribute-photo-wrapper">
+          <img src="marielitos-alegria.jpg" class="tribute-photo" alt="Retrato en acuarela de Marielitos bailando alegremente con un pañuelo blanco">
         </div>
+        <p class="tribute-caption">«...baila en la sala de tu casa»</p>
+      </section>
+
+      <!-- PÁGINA 13: CONTRAPORTADA -->
+      <section class="page page-closing" role="group" aria-roledescription="slide" aria-label="13 de 13">
         <p class="closing-quote">
           «Haz de tu vida algo tan hermoso que algún día puedas decir: 'me siento realizada al recordar mi vida'. Y siempre dale las gracias al Padre Celestial por cada momento de dicha».
         </p>
